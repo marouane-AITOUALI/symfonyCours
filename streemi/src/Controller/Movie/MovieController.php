@@ -7,10 +7,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MovieController extends AbstractController
 {
-    #[Route(path: '/movie', name: 'movie')]
+    #[Route(path: '/discover', name: 'discover')]
     public function index()
     {
-        return $this->render('movie/index.html.twig');
+        return $this->render('movie/discover.html.twig');
     }
     
     #[Route(path: '/movie/show', name: 'movie_show')]
