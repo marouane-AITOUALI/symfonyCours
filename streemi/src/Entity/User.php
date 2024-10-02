@@ -38,9 +38,16 @@ class User
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'publisher')]
     private Collection $comments;
 
+    /**
+     * @var Collection<int, WatchHistory>
+     */
+    #[ORM\OneToMany(targetEntity: WatchHistory::class, mappedBy: 'publisher')]
+    private Collection $watchHistories;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->watchHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,6 +139,36 @@ class User
             // set the owning side to null (unless already changed)
             if ($comment->getPublisher() === $this) {
                 $comment->setPublisher(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WatchHistory>
+     */
+    public function getWatchHistories(): Collection
+    {
+        return $this->watchHistories;
+    }
+
+    public function addWatchHistory(WatchHistory $watchHistory): static
+    {
+        if (!$this->watchHistories->contains($watchHistory)) {
+            $this->watchHistories->add($watchHistory);
+            $watchHistory->setPublisher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWatchHistory(WatchHistory $watchHistory): static
+    {
+        if ($this->watchHistories->removeElement($watchHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($watchHistory->getPublisher() === $this) {
+                $watchHistory->setPublisher(null);
             }
         }
 
