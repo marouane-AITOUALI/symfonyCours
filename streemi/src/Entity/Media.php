@@ -2,11 +2,9 @@
 
 namespace App\Entity;
 
-use App\Enum\MediaTypeEnum;
 use App\Repository\MediaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
@@ -16,30 +14,6 @@ class Media
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column(enumType: MediaTypeEnum::class)]
-    private ?MediaTypeEnum $mediaType = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $shortDescription = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $longDescription = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $releaseDate = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $coverImage = null;
-
-    #[ORM\Column]
-    private array $staff = [];
-
-    #[ORM\Column]
-    private array $mediaCast = [];
 
     /**
      * @var Collection<int, Comment>
@@ -54,117 +28,35 @@ class Media
     private Collection $watchHistories;
 
     /**
-     * @var Collection<int, CategoryMedia>
+     * @var Collection<int, PlaylistMedia>
      */
-    #[ORM\ManyToMany(targetEntity: CategoryMedia::class, mappedBy: 'media')]
-    private Collection $categoryMedia;
+    #[ORM\OneToMany(targetEntity: PlaylistMedia::class, mappedBy: 'media')]
+    private Collection $playlistMedia;
+
+    /**
+     * @var Collection<int, Category>
+     */
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'medias')]
+    private Collection $categories;
+
+    /**
+     * @var Collection<int, Language>
+     */
+    #[ORM\ManyToMany(targetEntity: Language::class, inversedBy: 'medias')]
+    private Collection $languages;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->watchHistories = new ArrayCollection();
-        $this->categoryMedia = new ArrayCollection();
+        $this->playlistMedia = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->languages = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getMediaType(): ?MediaTypeEnum
-    {
-        return $this->mediaType;
-    }
-
-    public function setMediaType(MediaTypeEnum $mediaType): static
-    {
-        $this->mediaType = $mediaType;
-
-        return $this;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): static
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    public function getShortDescription(): ?string
-    {
-        return $this->shortDescription;
-    }
-
-    public function setShortDescription(string $shortDescription): static
-    {
-        $this->shortDescription = $shortDescription;
-
-        return $this;
-    }
-
-    public function getLongDescription(): ?string
-    {
-        return $this->longDescription;
-    }
-
-    public function setLongDescription(string $longDescription): static
-    {
-        $this->longDescription = $longDescription;
-
-        return $this;
-    }
-
-    public function getReleaseDate(): ?\DateTimeInterface
-    {
-        return $this->releaseDate;
-    }
-
-    public function setReleaseDate(\DateTimeInterface $releaseDate): static
-    {
-        $this->releaseDate = $releaseDate;
-
-        return $this;
-    }
-
-    public function getCoverImage(): ?string
-    {
-        return $this->coverImage;
-    }
-
-    public function setCoverImage(string $coverImage): static
-    {
-        $this->coverImage = $coverImage;
-
-        return $this;
-    }
-
-    public function getStaff(): array
-    {
-        return $this->staff;
-    }
-
-    public function setStaff(array $staff): static
-    {
-        $this->staff = $staff;
-
-        return $this;
-    }
-
-    public function getMediaCast(): array
-    {
-        return $this->mediaCast;
-    }
-
-    public function setMediaCast(array $mediaCast): static
-    {
-        $this->mediaCast = $mediaCast;
-
-        return $this;
     }
 
     /**
@@ -228,28 +120,79 @@ class Media
     }
 
     /**
-     * @return Collection<int, CategoryMedia>
+     * @return Collection<int, PlaylistMedia>
      */
-    public function getCategoryMedia(): Collection
+    public function getPlaylistMedia(): Collection
     {
-        return $this->categoryMedia;
+        return $this->playlistMedia;
     }
 
-    public function addCategoryMedium(CategoryMedia $categoryMedium): static
+    public function addPlaylistMedium(PlaylistMedia $playlistMedium): static
     {
-        if (!$this->categoryMedia->contains($categoryMedium)) {
-            $this->categoryMedia->add($categoryMedium);
-            $categoryMedium->addMedium($this);
+        if (!$this->playlistMedia->contains($playlistMedium)) {
+            $this->playlistMedia->add($playlistMedium);
+            $playlistMedium->setMedia($this);
         }
 
         return $this;
     }
 
-    public function removeCategoryMedium(CategoryMedia $categoryMedium): static
+    public function removePlaylistMedium(PlaylistMedia $playlistMedium): static
     {
-        if ($this->categoryMedia->removeElement($categoryMedium)) {
-            $categoryMedium->removeMedium($this);
+        if ($this->playlistMedia->removeElement($playlistMedium)) {
+            // set the owning side to null (unless already changed)
+            if ($playlistMedium->getMedia() === $this) {
+                $playlistMedium->setMedia(null);
+            }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): static
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): static
+    {
+        $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Language>
+     */
+    public function getLanguages(): Collection
+    {
+        return $this->languages;
+    }
+
+    public function addLanguage(Language $language): static
+    {
+        if (!$this->languages->contains($language)) {
+            $this->languages->add($language);
+        }
+
+        return $this;
+    }
+
+    public function removeLanguage(Language $language): static
+    {
+        $this->languages->removeElement($language);
 
         return $this;
     }

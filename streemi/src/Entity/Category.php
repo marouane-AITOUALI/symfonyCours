@@ -16,20 +16,20 @@ class Category
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
     private ?string $label = null;
 
     /**
-     * @var Collection<int, CategoryMedia>
+     * @var Collection<int, Media>
      */
-    #[ORM\OneToMany(targetEntity: CategoryMedia::class, mappedBy: 'category')]
-    private Collection $categoryMedia;
+    #[ORM\ManyToMany(targetEntity: Media::class, mappedBy: 'categories')]
+    private Collection $medias;
 
     public function __construct()
     {
-        $this->categoryMedia = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -37,14 +37,14 @@ class Category
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getNom(): ?string
     {
-        return $this->name;
+        return $this->nom;
     }
 
-    public function setName(string $name): static
+    public function setNom(string $nom): static
     {
-        $this->name = $name;
+        $this->nom = $nom;
 
         return $this;
     }
@@ -62,30 +62,27 @@ class Category
     }
 
     /**
-     * @return Collection<int, CategoryMedia>
+     * @return Collection<int, Media>
      */
-    public function getCategoryMedia(): Collection
+    public function getMedias(): Collection
     {
-        return $this->categoryMedia;
+        return $this->medias;
     }
 
-    public function addCategoryMedium(CategoryMedia $categoryMedium): static
+    public function addMedia(Media $media): static
     {
-        if (!$this->categoryMedia->contains($categoryMedium)) {
-            $this->categoryMedia->add($categoryMedium);
-            $categoryMedium->setCategory($this);
+        if (!$this->medias->contains($media)) {
+            $this->medias->add($media);
+            $media->addCategory($this);
         }
 
         return $this;
     }
 
-    public function removeCategoryMedium(CategoryMedia $categoryMedium): static
+    public function removeMedia(Media $media): static
     {
-        if ($this->categoryMedia->removeElement($categoryMedium)) {
-            // set the owning side to null (unless already changed)
-            if ($categoryMedium->getCategory() === $this) {
-                $categoryMedium->setCategory(null);
-            }
+        if ($this->medias->removeElement($media)) {
+            $media->removeCategory($this);
         }
 
         return $this;
