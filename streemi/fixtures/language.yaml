@@ -1,0 +1,42 @@
+App\Entitu\Language
+  lang_fr:
+    nom: 'Français'
+    code: 'FR'
+  language_english:
+    nom: 'English'
+    code: 'En'
+  language_spanish:
+    nom: 'Espagnol'
+    code: 'ES'
+
+  # generate 10 languages: Italian, German, Dutch, Portuguese, Russian, Chinese, Japanese, Korean, Arabic, Hindi
+  lang_italian:
+    nom: 'Italiano'
+    code: 'IT'
+  lang_german:   
+    nom: 'Deutsch'
+    code: 'DE'
+  lang_dutch:
+    nom: 'Nederlands'
+    code: 'NL'
+  lang_portuguese:
+    nom: 'Português'
+    code: 'PT'    
+  lang_russian:   
+    nom: 'Русский'
+    code: 'RU'
+  lang_chinese:
+    nom: '中文'
+    code: 'ZH'
+  lang_japanese:
+    nom: '日本語'
+    code: 'JA'
+  lang_korean:
+    nom: '한국어'
+    code: 'KO'  
+  lang_arabic:
+    nom: 'العربية'
+    code: 'AR'
+  lang_hindi:
+    nom: 'हिन्दी'
+    code: 'HI'
