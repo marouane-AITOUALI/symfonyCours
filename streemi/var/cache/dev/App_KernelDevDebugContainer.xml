@@ -246,6 +246,10 @@
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
+    <service id="App\Repository\MovieRepository" class="App\Repository\MovieRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
     <service id="App\Repository\PlaylistMediaRepository" class="App\Repository\PlaylistMediaRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
@@ -259,6 +263,10 @@
       <argument type="service" id="doctrine"/>
     </service>
     <service id="App\Repository\SeasonRepository" class="App\Repository\SeasonRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\SerieRepository" class="App\Repository\SerieRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
@@ -2224,7 +2232,7 @@
     <service id="doctrine.orm.configuration" class="Doctrine\ORM\Configuration" abstract="true"/>
     <service id="doctrine.orm.entity_manager.abstract" class="Doctrine\ORM\EntityManager" lazy="true" abstract="true"/>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory">
-      <argument type="service" id=".service_locator.7m4rqx5"/>
+      <argument type="service" id=".service_locator.Tdy3N5B"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -2742,6 +2750,8 @@
     <service id=".abstract.instanceof.App\Repository\MediaLanguageRepository" class="App\Repository\MediaLanguageRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\MediaRepository" class="App\Repository\MediaRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\MediaRepository" class="App\Repository\MediaRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\MovieRepository" class="App\Repository\MovieRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\MovieRepository" class="App\Repository\MovieRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\PlaylistMediaRepository" class="App\Repository\PlaylistMediaRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\PlaylistMediaRepository" class="App\Repository\PlaylistMediaRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\PlaylistRepository" class="App\Repository\PlaylistRepository" autowire="true" abstract="true"/>
@@ -2750,6 +2760,8 @@
     <service id=".abstract.instanceof.App\Repository\PlaylistSubscriptionRepository" class="App\Repository\PlaylistSubscriptionRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SeasonRepository" class="App\Repository\SeasonRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\SeasonRepository" class="App\Repository\SeasonRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SerieRepository" class="App\Repository\SerieRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\SerieRepository" class="App\Repository\SerieRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SubscriptionHistoryRepository" class="App\Repository\SubscriptionHistoryRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\SubscriptionHistoryRepository" class="App\Repository\SubscriptionHistoryRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SubscriptionRepository" class="App\Repository\SubscriptionRepository" autowire="true" abstract="true"/>
@@ -3269,7 +3281,7 @@
         <argument key="doctrine.orm.default_listeners.attach_entity_listeners" type="service_closure" id="doctrine.orm.default_listeners.attach_entity_listeners"/>
       </argument>
     </service>
-    <service id=".service_locator.7m4rqx5" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Tdy3N5B" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\CategoryMediaRepository" type="service_closure" id="App\Repository\CategoryMediaRepository"/>
@@ -3279,10 +3291,12 @@
         <argument key="App\Repository\LanguageRepository" type="service_closure" id="App\Repository\LanguageRepository"/>
         <argument key="App\Repository\MediaLanguageRepository" type="service_closure" id="App\Repository\MediaLanguageRepository"/>
         <argument key="App\Repository\MediaRepository" type="service_closure" id="App\Repository\MediaRepository"/>
+        <argument key="App\Repository\MovieRepository" type="service_closure" id="App\Repository\MovieRepository"/>
         <argument key="App\Repository\PlaylistMediaRepository" type="service_closure" id="App\Repository\PlaylistMediaRepository"/>
         <argument key="App\Repository\PlaylistRepository" type="service_closure" id="App\Repository\PlaylistRepository"/>
         <argument key="App\Repository\PlaylistSubscriptionRepository" type="service_closure" id="App\Repository\PlaylistSubscriptionRepository"/>
         <argument key="App\Repository\SeasonRepository" type="service_closure" id="App\Repository\SeasonRepository"/>
+        <argument key="App\Repository\SerieRepository" type="service_closure" id="App\Repository\SerieRepository"/>
         <argument key="App\Repository\SubscriptionHistoryRepository" type="service_closure" id="App\Repository\SubscriptionHistoryRepository"/>
         <argument key="App\Repository\SubscriptionRepository" type="service_closure" id="App\Repository\SubscriptionRepository"/>
         <argument key="App\Repository\UserRepository" type="service_closure" id="App\Repository\UserRepository"/>
