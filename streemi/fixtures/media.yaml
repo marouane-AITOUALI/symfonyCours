@@ -1,7 +1,28 @@
-App\Entity\Movie
-  movie:
-    title: 'The Matrix'
-    shortDescription: 'A computer hacker.'
-    longDescription: 'A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.'
-    releaseDate: '<datetime()>'
-    coverImage: 'matrix.jpg'
+App\Entity\Media
+  media (template):
+    shortDescription: 'short description <current()>'
+    longDescription: 'long description <current()>'
+    releaseDate: '<dateTimeBetween('-1 week', '+1 week')>'
+    coverImage: 'https://picsum.photos/300/400?random=<current()>'
+    categories:
+      - '@category_action'
+      - '@category_aventure'
+    languages:
+      - '@lang_fr'
+      - '@lang_english'
+
+  App\Entity\Movie:
+    movie{1..50} (extends media):
+      title: 'Film <current()>'
+
+  App\Entity\Season:
+    seaon{1..50}:
+      number: <numberBetween(1, 50)>
+      serie: '@serie*'
+  
+
+   App\Entity\Episode:
+    episode{1..100}:
+      title: 'Episode <current()>'
+      number: <numberBetween(1, 50)>
+      serie: '@serie*'
