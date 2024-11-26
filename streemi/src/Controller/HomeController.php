@@ -24,6 +24,12 @@ class HomeController extends AbstractController
         MediaRepository $mediaRepository,
     ): Response
     {
-        return $this->render(view: 'index.html.twig');
+        // Appeler la méthode findPopular pour récupérer les médias populaires
+        $popularMedia = $mediaRepository->findPopular(8); // Limite à 8 résultats par exemple
+
+        // Passer les résultats à la vue
+        return $this->render('index.html.twig', [
+            'popularMedia' => $popularMedia,
+        ]);
     }
 }

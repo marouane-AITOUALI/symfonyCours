@@ -17,42 +17,16 @@ class MediaRepository extends ServiceEntityRepository
         parent::__construct($registry, Media::class);
     }
 
-    public function findPopular(int $maxResults): Collection
+    public function findPopular(int $maxResults): Array
     {
-        // popular media = media with max WatchHistory
-        // Media OneToMany WatchHistories
-
+        // Trier les médias par le nombre de vues, par exemple
         return $this->createQueryBuilder('m')
-            ->orderBy('m.watchHistories', 'DESC')
+            ->leftJoin('m.watchHistories', 'w') // Assure-toi que la relation est bien définie
+            ->groupBy('m.id')
+            ->orderBy('COUNT(w.id)', 'DESC') // On compte le nombre d'entrées dans `watchHistories`
             ->setMaxResults($maxResults)
             ->getQuery()
             ->getResult();
-
-      
     }
 
-//    /**
-//     * @return Media[] Returns an array of Media objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Media
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }
