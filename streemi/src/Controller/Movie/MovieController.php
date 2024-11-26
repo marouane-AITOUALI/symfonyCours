@@ -1,40 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Movie;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 class MovieController extends AbstractController
 {
-    #[Route(path: '/discover', name: 'discover')]
-    public function index()
+    #[Route(path: '/movie', name: 'page_detail_movie')]
+    public function detail(): Response
     {
-        return $this->render('movie/discover.html.twig');
-    }
-    
-    #[Route(path: '/movie/show', name: 'movie_show')]
-    public function show()
-    {
-        return $this->render('movie/show.html.twig');
+        return $this->render(view: 'movie/detail.html.twig');
     }
 
-    #[Route(path: '/movie/create', name: 'movie_create')]
-    public function create()
+    #[Route(path: '/serie', name: 'page_detail_serie')]
+    public function detailSerie(): Response
     {
-        return $this->render('movie/create.html.twig');
-    }
-
-    public function edit()
-    {
-        return $this->render('movie/edit.html.twig');
-    }
-
-    public function delete()
-    {
-        return $this->render('movie/delete.html.twig');
+        return $this->render(view: 'movie/detail_serie.html.twig');
     }
 }
-
-
-?>
