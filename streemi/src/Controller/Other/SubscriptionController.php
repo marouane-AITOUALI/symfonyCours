@@ -14,7 +14,10 @@ class SubscriptionController extends AbstractController
     #[Route('/subscriptions', name: 'page_subscription')]
     public function index(SubscriptionRepository $subscriptionRepository): Response
     {
-        $subscriptions = $subscriptionRepository->findAll();
+        $subscriptions = $subscriptionRepository->findBy(
+            [],
+            ['price' => 'ASC']  // Tri ascendant par le champ 'price'
+        );
         return $this->render('other/abonnements.html.twig', [
             'subscriptions' => $subscriptions,
         ]);

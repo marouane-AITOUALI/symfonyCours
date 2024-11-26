@@ -110,12 +110,12 @@ class AppFixtures extends Fixture
     {
         $options = [
             ['name' => '1-Month Standard Plan', 'duration' => 1, 'price' => 5],
-            ['name' => '3-Month Standard Plan', 'duration' => 3, 'price' => 12],
-            ['name' => '6-Month Standard Plan', 'duration' => 6, 'price' => 20],
-            ['name' => '1-Year Standard Plan', 'duration' => 12, 'price' => 35],
             ['name' => '1-Month Premium Plan', 'duration' => 1, 'price' => 8],
-            ['name' => '3-Month Premium Plan', 'duration' => 3, 'price' => 20],
+            ['name' => '3-Month Standard Plan', 'duration' => 3, 'price' => 12],
+            ['name' => '3-Month Premium Plan', 'duration' => 3, 'price' => 19],
+            ['name' => '6-Month Standard Plan', 'duration' => 6, 'price' => 20],
             ['name' => '6-Month Premium Plan', 'duration' => 6, 'price' => 35],
+            ['name' => '1-Year Standard Plan', 'duration' => 12, 'price' => 45],
             ['name' => '1-Year Premium Plan', 'duration' => 12, 'price' => 60],
         ];
 
@@ -153,18 +153,18 @@ class AppFixtures extends Fixture
     protected function createCategories(ObjectManager $manager, array &$categories): void
     {
         $list = [
-            ['title' => 'Adventure', 'tag' => 'Aventure'],
-            ['title' => 'Comedy', 'tag' => 'Comédie'],
-            ['title' => 'Drama', 'tag' => 'Drame'],
-            ['title' => 'Horror', 'tag' => 'Horreur'],
-            ['title' => 'Sci-Fi', 'tag' => 'Science-fiction'],
-            ['title' => 'Mystery', 'tag' => 'Thriller'],
+            ['nom' => 'Adventure', 'label' => 'Aventure'],
+            ['nom' => 'Comedy', 'label' => 'Comédie'],
+            ['nom' => 'Drama', 'label' => 'Drame'],
+            ['nom' => 'Horror', 'label' => 'Horreur'],
+            ['nom' => 'Sci-Fi', 'label' => 'Science-fiction'],
+            ['nom' => 'Mystery', 'label' => 'Thriller'],
         ];
 
         foreach ($list as $item) {
             $genre = new Category();
-            $genre->setNom(nom: $item['title']);
-            $genre->setLabel(label: $item['tag']);
+            $genre->setNom(nom: $item['nom']);
+            $genre->setLabel(label: $item['label']);
             $manager->persist(object: $genre);
             $categories[] = $genre;
         }
