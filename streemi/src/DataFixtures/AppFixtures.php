@@ -59,7 +59,7 @@ class AppFixtures extends Fixture
 
         $this->linkMediaToPlaylists(items: $medias, lists: $playlists, manager: $manager);
         $this->linkSubscriptionToUsers(users: $users, plans: $subscriptions, manager: $manager);
-        $this->linkMediaToCategories(items: $medias, categories: $categories);
+        $this->linkMediaToCategories(items: $medias, groups: $categories);
         $this->linkMediaToLanguages(items: $medias, languages: $languages);
         $this->addUserPlaylistSubscriptions(manager: $manager, users: $users, playlists: $playlists);
 

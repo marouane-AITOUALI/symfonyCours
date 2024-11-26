@@ -20,8 +20,8 @@ class ListController extends AbstractController
         PlaylistSubscriptionRepository $playlistSubscriptionRepository,
     ): Response
     {
-        $myPlaylists = $playlistRepository->findAll();
-        $mySubscriptionPlaylists = $playlistSubscriptionRepository->findAll();
+        $myPlaylists = $playlistRepository->findAll();  // Ceci doit être une collection d'objets Playlist
+        $mySubscriptionPlaylists = $playlistSubscriptionRepository->findAll();  // Ceci doit être une collection d'objets PlaylistSubscription
         return $this->render('movie/lists.html.twig', [
             'myPlaylists' => $myPlaylists,
             'mySubscriptionPlaylists' => $mySubscriptionPlaylists,
