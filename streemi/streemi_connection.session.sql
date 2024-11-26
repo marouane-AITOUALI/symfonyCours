@@ -1,1 +1,1 @@
-select * from subscription;
+select * from media

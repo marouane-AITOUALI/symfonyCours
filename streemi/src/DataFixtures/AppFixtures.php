@@ -89,7 +89,7 @@ class AppFixtures extends Fixture
             $content->setTitle(title: "{$type} Title $j");
             $content->setLongDescription(longDescription: "Detailed description $j");
             $content->setShortDescription(shortDescription: "Summary $j");
-            $content->setCoverImage(coverImage: "https://example.com/image_$j.jpg");
+            $content->setCoverImage(coverImage: "https://picsum.photos/1920/1080?random=$j");
             $content->setReleaseDate(releaseDate: new DateTime(datetime: "+10 days"));
             $manager->persist(object: $content);
             $medias[] = $content;
