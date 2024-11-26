@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9f43ca85b623d39aa4840fac725d4b78",
+    "content-hash": "9c1ea120f95c8a4217592f9dc5cd1387",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -1604,6 +1604,97 @@
                 }
             ],
             "time": "2024-07-03T17:54:12+00:00"
+        },
+        {
+            "name": "paragonie/sodium_compat",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paragonie/sodium_compat.git",
+                "reference": "a673d5f310477027cead2e2f2b6db5d8368157cb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/a673d5f310477027cead2e2f2b6db5d8368157cb",
+                "reference": "a673d5f310477027cead2e2f2b6db5d8368157cb",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "php-64bit": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7|^8|^9",
+                "vimeo/psalm": "^4|^5"
+            },
+            "suggest": {
+                "ext-sodium": "Better performance, password hashing (Argon2i), secure memory management (memzero), and better security."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "autoload.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "ISC"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com"
+                },
+                {
+                    "name": "Frank Denis",
+                    "email": "jedisct1@pureftpd.org"
+                }
+            ],
+            "description": "Pure PHP implementation of libsodium; uses the PHP extension if it exists",
+            "keywords": [
+                "Authentication",
+                "BLAKE2b",
+                "ChaCha20",
+                "ChaCha20-Poly1305",
+                "Chapoly",
+                "Curve25519",
+                "Ed25519",
+                "EdDSA",
+                "Edwards-curve Digital Signature Algorithm",
+                "Elliptic Curve Diffie-Hellman",
+                "Poly1305",
+                "Pure-PHP cryptography",
+                "RFC 7748",
+                "RFC 8032",
+                "Salpoly",
+                "Salsa20",
+                "X25519",
+                "XChaCha20-Poly1305",
+                "XSalsa20-Poly1305",
+                "Xchacha20",
+                "Xsalsa20",
+                "aead",
+                "cryptography",
+                "ecdh",
+                "elliptic curve",
+                "elliptic curve cryptography",
+                "encryption",
+                "libsodium",
+                "php",
+                "public-key cryptography",
+                "secret-key cryptography",
+                "side-channel resistant"
+            ],
+            "support": {
+                "issues": "https://github.com/paragonie/sodium_compat/issues",
+                "source": "https://github.com/paragonie/sodium_compat/tree/v2.1.0"
+            },
+            "time": "2024-09-04T12:51:01+00:00"
         },
         {
             "name": "psr/cache",
@@ -5214,16 +5305,16 @@
     "packages-dev": [
         {
             "name": "doctrine/doctrine-fixtures-bundle",
-            "version": "3.6.1",
+            "version": "3.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineFixturesBundle.git",
-                "reference": "d13a08ebf244f74c8adb8ff15aa55d01c404e534"
+                "reference": "f44a224e27573b79140197a44e68484c45fb24da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineFixturesBundle/zipball/d13a08ebf244f74c8adb8ff15aa55d01c404e534",
-                "reference": "d13a08ebf244f74c8adb8ff15aa55d01c404e534",
+                "url": "https://api.github.com/repos/doctrine/DoctrineFixturesBundle/zipball/f44a224e27573b79140197a44e68484c45fb24da",
+                "reference": "f44a224e27573b79140197a44e68484c45fb24da",
                 "shasum": ""
             },
             "require": {
@@ -5281,7 +5372,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/DoctrineFixturesBundle/issues",
-                "source": "https://github.com/doctrine/DoctrineFixturesBundle/tree/3.6.1"
+                "source": "https://github.com/doctrine/DoctrineFixturesBundle/tree/3.6.2"
             },
             "funding": [
                 {
@@ -5297,7 +5388,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-05-07T07:16:35+00:00"
+            "time": "2024-11-13T07:41:29+00:00"
         },
         {
             "name": "nikic/php-parser",

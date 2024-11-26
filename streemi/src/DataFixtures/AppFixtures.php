@@ -11,106 +11,176 @@ use App\Entity\Subscription;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use App\Enum\UserAccountStatusEnum;
 
 class AppFixtures extends Fixture
 {
     public const MAX_USERS = 10;
-    public const PLAYLISTS_PER_USER = 5;
-    public const MAX_SUBSCRIPTIONS = 3;
     public const MAX_MEDIA = 100;
+    public const MAX_SUBSCRIPTIONS = 3;
+    public const MAX_SEASONS = 3;
+    public const MAX_EPISODES = 10;
+
+    public const PLAYLISTS_PER_USER = 3;
     public const MAX_MEDIA_PER_PLAYLIST = 3;
+    public const MAX_LANGUAGE_PER_MEDIA = 3;
+    public const MAX_CATEGORY_PER_MEDIA = 3;
+    public const MAX_SUBSCRIPTIONS_HISTORY_PER_USER = 3;
+    public const MAX_COMMENTS_PER_MEDIA = 10;
+    public const MAX_PLAYLIST_SUBSCRIPTION_PER_USERS = 3;
 
     public function load(ObjectManager $manager): void
     {
         $users = [];
         $medias = [];
         $playlists = [];
+        $categories = [];
+        $languages = [];
+        $subscriptions = [];
 
-        for ($i = 0; $i < self::MAX_USERS; $i++) {
-            $user = $this->createUser($i, $manager);
-            $users[] = $user;
+        $this->createUsers(manager: $manager, users: $users);
+        $this->createPlaylists(manager: $manager, users: $users, playlists: $playlists);
+        $this->createSubscriptions(manager: $manager, users: $users, subscriptions: $subscriptions);
+        $this->createCategories(manager: $manager, categories: $categories);
+        $this->createLanguages(manager: $manager, languages: $languages);
+        $this->createMedia(manager: $manager, medias: $medias);
+        $this->createComments(manager: $manager, medias: $medias, users: $users);
 
-            for ($k = 0; $k < random_int(1, self::PLAYLISTS_PER_USER); $k++) {
-                $playlists = $this->createPlaylists($user, $manager, $playlists);
-            }
-        }
-
-        $this->createMediaAndLinkToPlaylists($manager, $playlists);
-        $this->createSubscriptions($manager, $users);
+        $this->linkMediaToPlaylists(medias: $medias, playlists: $playlists, manager: $manager);
+        $this->linkSubscriptionToUsers(users: $users, subscriptions: $subscriptions, manager: $manager);
+        $this->linkMediaToCategories(medias: $medias, categories: $categories);
+        $this->linkMediaToLanguages(medias: $medias, languages: $languages);
+        $this->addUserPlaylistSubscriptions(manager: $manager, users: $users, playlists: $playlists);
 
         $manager->flush();
     }
 
-    protected function createSubscriptions(ObjectManager $manager, array $users): void
+    protected function createUsers(ObjectManager $manager, array &$users): void
     {
-        for ($m = 0; $m < self::MAX_SUBSCRIPTIONS; $m++) {
-            $abonnement = new Subscription();
-            $abonnement->setDuration(duration: 10 * ($m + 1));
-            $abonnement->setName(name: 'Abonnement 10 jours');
-            $abonnement->setPrice(price: 50);
-            $manager->persist(object: $abonnement);
+        for ($i = 0; $i < self::MAX_USERS; $i++) {
+            $profile = new User();
+            $profile->setEmail(email: "user_$i@sample.com");
+            $profile->setUsername(username: "profile_$i");
+            $profile->setPassword(password: 'securepass');
+            $profile->setAccountStatus(accountStatus: UserAccountStatusEnum::ACTIVE);
+            $users[] = $profile;
 
-            $randomUser = $users[array_rand($users)];
-            $randomUser->setCurrentSubscription(currentSubscription: $abonnement);
+            $manager->persist(object: $profile);
         }
     }
 
-    protected function linkMediaToPlaylist(Media $media, array $playlists, ObjectManager $manager): void
-    {
-        $playlistMedia = new PlaylistMedia();
-        $playlistMedia->setMedia(media: $media);
-        $playlistMedia->setAddedAt(addedAt: new \DateTimeImmutable());
-        $playlistMedia->setPlaylist(playlist: $playlists[array_rand($playlists)]);
-
-        $manager->persist(object: $playlistMedia);
-    }
-
-    protected function createMedia(int $j, ObjectManager $manager): Media
-    {
-        $media = random_int(min: 0, max: 1) === 0 ? new Movie() : new Serie();
-
-        $media->setTitle(title: "Film {$j}");
-        $media->setLongDescription(longDescription: 'Longue description');
-        $media->setShortDescription(shortDescription: 'Short description');
-        $media->setCoverImage(coverImage: 'http://');
-        $media->setReleaseDate(releaseDate: new \DateTime(datetime: "+7 days"));
-        $manager->persist(object: $media);
-
-        return $media;
-    }
-
-    protected function createMediaAndLinkToPlaylists(ObjectManager $manager, array $playlists): void
+    protected function createMedia(ObjectManager $manager, array &$medias): void
     {
         for ($j = 0; $j < self::MAX_MEDIA; $j++) {
-            $media = $this->createMedia($j, $manager);
+            $content = random_int(min: 0, max: 1) === 0 ? new Movie() : new Serie();
+            $type = $content instanceof Movie ? 'Movie' : 'Series';
 
-            for ($l = 0; $l < random_int(1, self::MAX_MEDIA_PER_PLAYLIST); $l++) {
-                $this->linkMediaToPlaylist($media, $playlists, $manager);
+            $content->setTitle(title: "{$type} Title $j");
+            $content->setLongDescription(longDescription: "Detailed description $j");
+            $content->setShortDescription(shortDescription: "Summary $j");
+            $content->setCoverImage(coverImage: "https://example.com/image_$j.jpg");
+            $content->setReleaseDate(releaseDate: new DateTime(datetime: "+10 days"));
+            $manager->persist(object: $content);
+            $medias[] = $content;
+
+            $this->addCastingAndStaff(media: $content);
+
+            if ($content instanceof Serie) {
+                $this->createSeasons(manager: $manager, media: $content);
+            }
+
+    //        if ($content instanceof Movie) {
+    //            $content->setDuration(duration: random_int(90, 200));
+    //        }
+        }
+    }
+
+    protected function createSubscriptions(ObjectManager $manager, array $users, array &$subscriptions): void
+    {
+        $options = [
+            ['name' => '1-Month Standard Plan', 'duration' => 1, 'price' => 5],
+            ['name' => '3-Month Standard Plan', 'duration' => 3, 'price' => 12],
+            ['name' => '6-Month Standard Plan', 'duration' => 6, 'price' => 20],
+            ['name' => '1-Year Standard Plan', 'duration' => 12, 'price' => 35],
+            ['name' => '1-Month Premium Plan', 'duration' => 1, 'price' => 8],
+            ['name' => '3-Month Premium Plan', 'duration' => 3, 'price' => 20],
+            ['name' => '6-Month Premium Plan', 'duration' => 6, 'price' => 35],
+            ['name' => '1-Year Premium Plan', 'duration' => 12, 'price' => 60],
+        ];
+
+        foreach ($options as $option) {
+            $subscription = new Subscription();
+            $subscription->setDuration(duration: $option['duration']);
+            $subscription->setName(name: $option['name']);
+            $subscription->setPrice(price: $option['price']);
+            $manager->persist(object: $subscription);
+            $subscriptions[] = $subscription;
+
+            for ($i = 0; $i < random_int(min: 1, max: self::MAX_SUBSCRIPTIONS); $i++) {
+                $randomProfile = $users[array_rand(array: $users)];
+                $randomProfile->setCurrentSubscription(currentSubscription: $subscription);
             }
         }
     }
 
-    protected function createPlaylists(User $user, ObjectManager $manager, array $playlists): array
+    public function createPlaylists(ObjectManager $manager, array $users, array &$playlists): void
     {
-        $playlist = new Playlist();
-        $playlist->setName(name: 'Ma playlist');
-        $playlist->setCreatedAt(createdAt: new \DateTimeImmutable());
-        $playlist->setUpdatedAt(updatedAt: new \DateTimeImmutable());
-        $playlist->setCreator(creator: $user);
-        $manager->persist(object: $playlist);
-        $playlists[] = $playlist;
+        foreach ($users as $account) {
+            for ($i = 0; $i < self::PLAYLISTS_PER_USER; $i++) {
+                $tracklist = new Playlist();
+                $tracklist->setName(name: "Playlist utilisateur $i");
+                $tracklist->setCreatedAt(createdAt: new DateTimeImmutable());
+                $tracklist->setUpdatedAt(updatedAt: new DateTimeImmutable());
+                $tracklist->setCreator(creator: $account);
+                $playlists[] = $tracklist;
 
-        return $playlists;
+                $manager->persist(object: $tracklist);
+            }
+        }
     }
 
-    protected function createUser(int $i, ObjectManager $manager): User
+    protected function createCategories(ObjectManager $manager, array &$categories): void
     {
-        $user = new User();
-        $user->setEmail(email: "test_{$i}@example.com");
-        $user->setUsername(username: "test_{$i}");
-        $user->setPassword(password: 'coucou');
-        $manager->persist(object: $user);
+        $list = [
+            ['title' => 'Adventure', 'tag' => 'Aventure'],
+            ['title' => 'Comedy', 'tag' => 'Comédie'],
+            ['title' => 'Drama', 'tag' => 'Drame'],
+            ['title' => 'Horror', 'tag' => 'Horreur'],
+            ['title' => 'Sci-Fi', 'tag' => 'Science-fiction'],
+            ['title' => 'Mystery', 'tag' => 'Thriller'],
+        ];
 
-        return $user;
+        foreach ($list as $item) {
+            $genre = new Category();
+            $genre->setNom(nom: $item['title']);
+            $genre->setLabel(label: $item['tag']);
+            $manager->persist(object: $genre);
+            $categories[] = $genre;
+        }
     }
+
+    protected function createLanguages(ObjectManager $manager, array &$languages): void
+    {
+        $languagesList = [
+            ['code' => 'fr', 'name' => 'French'],
+            ['code' => 'en', 'name' => 'English'],
+            ['code' => 'es', 'name' => 'Spanish'],
+            ['code' => 'de', 'name' => 'German'],
+            ['code' => 'it', 'name' => 'Italian'],
+        ];
+
+        foreach ($languagesList as $languageInfo) {
+            $dialect = new Language();
+            $dialect->setCode(code: $languageInfo['code']);
+            $dialect->setNom(nom: $languageInfo['name']);
+            $manager->persist(object: $dialect);
+            $languages[] = $dialect;
+        }
+    }
+
+
+
+
+
+
 }
