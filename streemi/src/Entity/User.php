@@ -7,10 +7,12 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Nelmio\Alice\scenario3\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface as UserUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+class User implements UserUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -61,6 +63,9 @@ class User
      */
     #[ORM\OneToMany(targetEntity: WatchHistory::class, mappedBy: 'watcher')]
     private Collection $watchHistories;
+
+    #[ORM\Column]
+    private $roles = [];
 
     public function __construct()
     {
@@ -284,5 +289,24 @@ class User
         }
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return $roles;
+    }
+
+    public function eraseCredentials(): void
+    {
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function setRoles(array $roles): void
+    {
+        $this->roles = $roles;
     }
 }
