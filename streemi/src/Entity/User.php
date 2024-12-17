@@ -65,7 +65,7 @@ class User implements UserUserInterface
     private Collection $watchHistories;
 
     #[ORM\Column]
-    private $roles = [];
+    private array $roles = [];
 
     public function __construct()
     {
@@ -293,7 +293,7 @@ class User implements UserUserInterface
 
     public function getRoles(): array
     {
-        return $roles;
+        return $this->roles;
     }
 
     public function eraseCredentials(): void
@@ -305,8 +305,10 @@ class User implements UserUserInterface
         return $this->email;
     }
 
-    public function setRoles(array $roles): void
+    public function setRoles(array $roles): static
     {
         $this->roles = $roles;
+
+        return $this;
     }
 }

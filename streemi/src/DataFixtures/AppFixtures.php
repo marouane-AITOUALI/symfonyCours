@@ -74,6 +74,7 @@ class AppFixtures extends Fixture
             $profile->setUsername(username: "profile_$i");
             $profile->setPassword(password: "securepass$i");
             $profile->setAccountStatus(accountStatus: UserAccountStatusEnum::ACTIVE);
+            $profile->setRoles(['ROLE_USER']);
             $users[] = $profile;
 
             $manager->persist(object: $profile);
